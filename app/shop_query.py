@@ -8,6 +8,8 @@
 from app.db.models import Shop
 
 import random
+import string
+
 from random import randint
 from pprint import pprint
 
@@ -20,7 +22,7 @@ import logging
 reload(sys)
 sys.setdefaultencoding('utf8')
 
-logging.basicConfig(filename='shop-query.log', filemode='wb',
+logging.basicConfig(filename='shop-query.log', filemode='a+',
                     format='%(asctime)s - %(levelname)s - %(message)s', level=logging.INFO)
 logger = logging.getLogger(__name__)
 
@@ -62,6 +64,8 @@ def add(**shop_create):
 
     new_shop = Shop()
     for k, v in shop_create.iteritems():
+        if not (k or v):
+            continue
         setattr(new_shop, k, v)
 
     session.add(new_shop)
@@ -70,6 +74,7 @@ def add(**shop_create):
         shop_id = new_shop.id
         session.commit()
     except Exception as e:
+        session.rollback()
         logger.error('error:{}'.format(e))
 
     return shop_id
@@ -114,14 +119,12 @@ def update(shop_id, **shop_update):
         logger.error('shop_id:{},error:{}'.format(shop_id, e))
 
 
-def show_query_shop():
-    shops = query(50)
+def show_query_shop(size=50):
+    shops = query(size)
     if not shops:
         return
     for shop in shops:
-        from pprint import pprint
         pprint(str(shop.__dict__))
-        pprint(str(shop.id))
 
 
 def get_random_shop_id():
@@ -134,7 +137,6 @@ def get_random_shop_id():
 
 
 def generate_number_string(size):
-    import string
     random_string = [random.choice(string.digits) for x in range(0, size)]
     return ''.join(random_string)
 
@@ -176,6 +178,7 @@ def batch():
 
     update(shop_id, **shop_update)
     pprint(get(shop_id))
+    logger.info('shop_id:{}'.format(shop_id))
 
 
 def run():
