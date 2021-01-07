@@ -2,7 +2,7 @@
 Flask==1.0
 ipython==5.8.0
 Jinja2==2.10
-lxml==4.2.3
+lxml==4.6.2
 numpy==1.14.5
 PyMySQL==0.8.0
 redis==2.10.6
