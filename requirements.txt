@@ -1,7 +1,7 @@
 # pip install -r requirements.txt
 Flask==1.0
 ipython==5.8.0
-Jinja2==2.10
+Jinja2==2.11.3
 lxml==4.2.3
 numpy==1.14.5
 PyMySQL==0.8.0
